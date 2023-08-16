@@ -1,13 +1,13 @@
 ---
-title: How to configure Dynamic Data API endpoints.
-description: This guide shows how to configure the Dynamic Data API endpoints.
+title: How to configure Dynamic Data Exchange API endpoints.
+description: This guide shows how to configure the Dynamic Data Exchange API endpoints.
 last_updated: June 23, 2023
 template: howto-guide-template
 redirect_from: 
-  - /docs/scos/dev/glue-api-guides/202304.0/dynamic-data-api/how-to-guides/how-to-configure-dynamic-data-api.html
+  - /docs/scos/dev/glue-api-guides/202304.0/dynamic-data-api/how-to-guides/how-to-configure-dynamic-data-exchange-api.html
 ---
 
-This guide shows how to configure the Dynamic Data API endpoints.
+This guide shows how to configure the Dynamic Data Exchange API endpoints.
 
 In order to incorporate a new endpoint for interacting with entities in the database, 
 it is necessary to add a corresponding row to the `spy_dynamic_entity_configuration` table. 
@@ -114,7 +114,7 @@ COMMIT;
 
 {% info_block warningBox "Verification" %}
 
-If everything is set up correctly, you can follow [How to send request in Dynamic Data API](/docs/scos/dev/glue-api-guides/{{page.version}}/dynamic-data-api/how-to-guides/how-to-send-request-in-dynamic-data-api.html) to discover how to request your API endpoint.
-Or if you're in the middle of the integration process for the Dynamic Data API follow [Dynamic Data API integration](/docs/scos/dev/feature-integration-guides/{{page.version}}/glue-api/dynamic-data-api-integration.html) to proceed with it.
+If everything is set up correctly, you can follow [How to send request in Dynamic Data Exchange API](/docs/scos/dev/glue-api-guides/{{page.version}}/dynamic-data-api/how-to-guides/how-to-send-request-in-dynamic-data-exchange-api.html) to discover how to request your API endpoint.
+Or if you're in the middle of the integration process for the Dynamic Data Exchange API follow [Dynamic Data Exchange API integration](/docs/scos/dev/feature-integration-guides/{{page.version}}/glue-api/dynamic-data-exchange-api-integration.html) to proceed with it.
 
 {% endinfo_block %}
