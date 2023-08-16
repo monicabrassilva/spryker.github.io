@@ -5,7 +5,11 @@ const Suggestions = {
         this.searchClient = searchClient;
         const sources = indicesConfig.map(indexConfig => this.createSource(indexConfig));
         const {searchInput, options} = autocompleteConfig;
-        autocomplete(searchInput, options, sources);
+        autocomplete(searchInput, options, sources).one("autocomplete:updated", function(e){
+            $('.search-popup__more').show();
+        }).on("autocomplete:updated", function(e){
+            $('.search-popup__more').attr({'href': `/search?query=${e.target.value}`});
+        });
         this.bindSearchEvents(searchInput);
     },
     createSource(indexConfig) {
@@ -18,7 +22,7 @@ const Suggestions = {
             ),
             name: indexConfig.name,
             templates: {
-                header: `<div>${indexConfig.title}</div>`,
+                header: `<div class="aa-dropdown-menu__title">${indexConfig.title}</div>`,
                 suggestion(suggestion) {
                     let title = suggestion._highlightResult.title
                         ? suggestion._highlightResult.title.value
@@ -30,7 +34,7 @@ const Suggestions = {
 
                     return `<a href="${suggestion.url}">${title}</a>`;
                 },
-                empty: '<p>No matching results</p>',
+                empty: '<div class="aa-dropdown-menu__empty"><i class="icon-search"></i>No results found</div>',
             },
         };
     },

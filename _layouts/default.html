@@ -1,54 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     {% include head.html %}
-    <script>
-        $(document).ready(function() {
-            // Initialize navgoco with default options
-            $("#mysidebar").navgoco({
-                caretHtml: '',
-                accordion: true,
-                openClass: 'active', // open
-                save: false, // leave false or nav highlighting doesn't work right
-                cookie: {
-                    name: 'navgoco',
-                    expires: false,
-                    path: '/'
-                },
-                slide: {
-                    duration: 400,
-                    easing: 'swing'
-                }
-            });
-
-            $("#collapseAll").click(function(e) {
-                e.preventDefault();
-                $("#mysidebar").navgoco('toggle', false);
-            });
-
-            $("#expandAll").click(function(e) {
-                e.preventDefault();
-                $("#mysidebar").navgoco('toggle', true);
-            });
-
-        });
-
-    </script>
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("#tg-sb-link").click(function() {
-                $("#tg-sb-sidebar").toggle();
-                $("#tg-sb-content").toggleClass('col-md-9');
-                $("#tg-sb-content").toggleClass('col-md-12');
-                $("#tg-sb-icon").toggleClass('fa-toggle-on');
-                $("#tg-sb-icon").toggleClass('fa-toggle-off');
-            });
-        });
     </script>
     {% if page.datatable == true %}
     <!-- Include the standard DataTables bits -->
@@ -70,18 +27,20 @@
        });
     </script>
     {% endif %}
-
 </head>
 <body class="{{page.layout}}-layout">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KLNNSNV" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <div class="page-wrapper">
     {% include topnav.html %}
     <!-- Page Content -->
     {{content}}
         <!-- id="tg-sb-content" -->
     {% include footer.html %}
+    {% if site.google_analytics %}
+    {% include google_analytics.html %}
+    {% endif %}
 </div>
 </body>
-{% if site.google_analytics %}
-{% include google_analytics.html %}
-{% endif %}
 </html>

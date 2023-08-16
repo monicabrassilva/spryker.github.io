@@ -27,53 +27,194 @@ layout: default
 <div class="page-content page-content--post">
 
     <aside class="main-sidebar">
-        <div class="main-sidebar__inner">
-            <h3>Marketplace Developer Guide</h3>
-
-            {% unless page.hide_sidebar %}
-                <div id="tg-sb-sidebar">
-                    {% include sidebar.html %}
+        <div class="main-sidebar__title-wrapper">
+            <h3 data-toc-skip class="tablet-show main-sidebar__title">{{ site.data.sidebars[page.sidebar].title }}</h3>
+        </div>
+        <a href="#" class="main-sidebar__opener tablet-hidden js-main-sidebar-switcher" aria-label="sidebar desktop opener">
+            <span class="main-sidebar__opener-decorator"></span>
+            <span class="main-sidebar__opener-decorator"></span>
+            <span class="main-sidebar__opener-decorator"></span>
+        </a>
+        <a href="#" class="main-sidebar__opener tablet-show js-main-sidebar-opener" aria-label="sidebar mobile opener">
+            <span class="main-sidebar__opener-decorator"></span>
+            <span class="main-sidebar__opener-decorator"></span>
+            <span class="main-sidebar__opener-decorator"></span>
+        </a>
+        <div class="main-sidebar__popup">
+            <div class="main-sidebar__inner">
+                <div class="main-sidebar__header">
+                    <a href="#" class="main-sidebar__close"></a>
                 </div>
-            {% endunless %}
+                <div class="main-sidebar__slide">
+                    <h3 class="main-sidebar__title" data-toc-skip>{{ site.data.sidebars[page.sidebar].title }}</h3>
+
+                    {% unless page.hide_sidebar %}
+                        <div id="tg-sb-sidebar">
+                            {% render_sidebar %}
+                        </div>
+                    {% endunless %}
+                </div>
+            </div>
         </div>
     </aside>
     <div class="post-content">
         <div class="post-header">
-            <h1 class="post-title-main">{{ page.title }}</h1>
+            <h1 class="post-header__title">{{ page.title }}</h1>
+
+            <div class="post-meta">Last updated: <time datetime="">{% if page.last_updated %} {{ page.last_updated | date: "%B %-d, %Y" }} {% else %} {{ page.last_modified_at | date: "%B %-d, %Y" }} {% endif %}</time></div>
+
+            {% if site.github_editme_path %}
+                <a target="_blank" rel="noopener" href="https://github.com/{{site.github_editme_path}}{{page.path}}" class="button post-header__button button--small" role="button"><i class="icon-github"></i> Edit on GitHub</a>
+            {% endif %}
         </div>
 
         {% if page.summary %}
             <div class="summary">{{page.summary}}</div>
         {% endif %}
 
-        {% if site.github_editme_path %}
-            <a target="_blank" rel="noopener" href="https://github.com/{{site.github_editme_path}}{{page.path}}" class="btn btn-default githubEditButton" role="button"><i class="fa fa-github fa-lg"></i> Edit me</a>
+
+        {% if page.canonical_url != nil and page.latest_version != nil %}
+        {% info_block errorBox %}
+
+        You are browsing a previous version of the document. The latest version is <a href="{{ page.canonical_url }}">{{ site.versions[page.latest_version.version] | default: 'undefined' }}</a>.
+
+        {% endinfo_block %}
         {% endif %}
 
         {{content}}
 
-        <div class="tags">
-            {% if page.tags != null %}
-            <b>Tags: </b>
-            {% assign projectTags = site.data.tags.allowed-tags %}
-            {% for tag in page.tags %}
-            {% if projectTags contains tag %}
-            <a href="{{ "tag_" | append: tag | append: ".html" }}" class="btn btn-default navbar-btn cursorNorm" role="button">{{page.tagName}}{{tag}}</a>
-            {% endif %}
-            {% endfor %}
-            {% endif %}
-        </div>
+        {% if page.tags != null %}
+            <div class="tag-list">
+                {% assign projectTags = site.data.tags.allowed-tags %}
+                {% for tag in page.tags %}
+                    {% if projectTags contains tag %}
+                        <a href="{{ "tag_" | append: tag | append: ".html" }}" class="button button--xs tag-item" role="button">{{page.tagName}}{{tag}}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
 
-        {% include commento.html %}
+        <aside class="form-collapse">
+            <div class="confirm-block">
+                <div class="js-form-collapse__first-step">
+                    <div class="confirm-block__flex">
+                        <strong class="confirm-block__title">
+                            <span class="confirm-block__title-text">Was this article helpful?</span>
+                        </strong>
+                        <div class="confirm-block__buttons">
+                            <button class="button confirm-block__button button--small js-form-collapse__second-step-opener"><i class="icon-thumb-down"></i>No</button>
+                            <button class="button confirm-block__button button--small js-form-collapse__second-step-opener"><i class="icon-thumb-up"></i>Yes</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="js-form-collapse__second-step hidden">
+                    <div class="confirm-block__flex">
+                        <strong class="confirm-block__title">
+                            <i class="icon-check confirm-block__title-icon"></i>
+                            <span class="confirm-block__title-text">Thanks for letting us know!</span>
+                        </strong>
+                        <div class="confirm-block__buttons">
+                            <button class="button button--red confirm-block__button js-form-collapse__opener">Leave feedback</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="js-form-collapse__slide feedback-form__slide">
+                <form id="feedback-form" class="feedback-form" action="{{ site.form_endpoints['feedback'] }}" method="POST">
+                    <input type="hidden" name="url" value="{{ page.url }}">
+                    <input type="hidden" name="helpful" class="js-form-collapse__short-feedback">
+                    <h3 class="feedback-form__title" data-toc-skip>Tell us what could be better</h3>
+                    <div class="feedback-form__block">
+                        <div class="feedback-form__column">
+                            <div class="feedback-form__relative">
+                                <input id="feedback-name" type="text" name="name" class="feedback-form__input" placeholder="Name (Optional)">
+                                <label for="feedback-name">Name <mark>(Optional)</mark></label>
+                            </div>
+                        </div>
+                        <div class="feedback-form__column">
+                            <div class="feedback-form__relative">
+                                <input id="feedback-email" type="email" name="email" class="feedback-form__input optional-email" placeholder="Email (Optional)">
+                                <label for="feedback-email">Email <mark>(Optional)</mark></label>
+                                <span class="feedback-form__error">Invalid email format.</span>
+                            </div>
+                        </div>
+                        <div class="feedback-form__column feedback-form__column--full">
+                            <div class="feedback-form__relative">
+                                <textarea id="feedback-text" name="feedback" class="feedback-form__textarea required-field" placeholder="Type your thoughts here"></textarea>
+                                <label for="feedback-text">Type your thoughts here</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feedback-form__action-row">
+                        <input id="feedback-submit" type="submit" value="Send feedback" class="feedback-form__submit button button--black">
+                    </div>
+                </form>
+                <div class="feedback-form__success-message">
+                    <p>We appreciate the time you took to share the feedback <br class="mobile-hidden">and will consider it as soon as possible.</p>
+                </div>
+                <a href="#" class="feedback-form__close js-form-collapse__close">
+                    <i class="icon-cross"></i>
+                </a>
+            </div>
+        </aside>
+
+        {% if page.related != null %}
+            <aside class="related">
+            <h3 class="related__title" data-toc-skip>Related articles</h3>
+            {% for relatedPage in page.related %}
+                {% assign link = relatedPage.link | prepend: '/' %}
+                {% assign version = page.version | default: site.version %}
+
+                <a href="{{link | replace_first: "page.version", version }}" class="related__link">
+                    <i class="icon-article related__link-icon"></i>
+                    <span class="related__link-text">{{relatedPage.title}}</span>
+                </a>
+            {% endfor %}
+            </aside>
+        {% endif %}
     </div>
 
     <aside class="alt-sidebar">
-        <p>Versions</p>
+        <div class="alt-sidebar__sticky">
+            {% include version_selector.html %}
 
-        {% unless page.toc == false %}
-        {% include toc.html %}
-        {% endunless %}
+            {% unless page.toc == false %}
+                {% include toc.html %}
+            {% endunless %}
+
+            {% if page.tags != null %}
+                <div class="tag-list desktop-hidden">
+                    {% assign projectTags = site.data.tags.allowed-tags %}
+                    {% for tag in page.tags %}
+                        {% if projectTags contains tag %}
+                            <a href="{{ "tag_" | append: tag | append: ".html" }}" class="button button--xs tag-item" role="button">{{page.tagName}}{{tag}}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
     </aside>
-</div>
 
-{{site.data.alerts.hr_shaded}}
+    <div class="post-anchor">
+        <a href="#" class="post-anchor__button" aria-label="scroll top">
+            <i class="icon-arrow-up"></i>
+        </a>
+    </div>
+
+    <div class="hubspot-submitted">
+        <div class="hubspot-submitted__popup">
+            <div class="hubspot-submitted__popup-inner">
+                <div class="hubspot-submitted__popup-body">
+                    <div class="hubspot-submitted__decoration">
+                        <i class="icon-email hubspot-submitted__decoration-icon"></i>
+                    </div>
+                    <h3 class="hubspot-submitted__popup-title">Thank you!</h3>
+                    <p class="hubspot-submitted__popup-text">For submitting the form</p>
+                    <button class="button button--red hubspot-submitted__close">Ok</button>
+                </div>
+            </div>
+        </div>
+        <div class="hubspot-submitted__popup-overlay"></div>
+    </div>
+</div>
